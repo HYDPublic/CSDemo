@@ -11,5 +11,13 @@
         <asp:Label runat="server" ID="InputLabel">Input: </asp:Label>
         <asp:TextBox runat="server" ID="InputTextBox"></asp:TextBox>
         <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" />
+
+        <hr />
+        <hr />
+
+        <asp:Label runat="server">Output: </asp:Label>
+        <br />
+        <asp:Label runat="server" ID="OutputLabel">dummy text</asp:Label>
+
     </div>
 </asp:Content>

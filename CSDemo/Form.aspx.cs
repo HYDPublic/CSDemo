@@ -2,6 +2,8 @@
 using System.Web;
 using System.Text;
 using static System.Net.WebRequest;
+using System.IO;
+using System.Net;
 
 public partial class Default2 : System.Web.UI.Page
 {
@@ -14,26 +16,74 @@ public partial class Default2 : System.Web.UI.Page
     protected void InputSubmitButton_Click(object sender, EventArgs e)
     {
         // Make the API request call, then return the result.
-        InputLabel.Text = InputTextBox.Text;
-        InputTextBox.Text = string.Empty;
+        //InputLabel.Text = InputTextBox.Text;
+        //InputTextBox.Text = string.Empty;
 
         //https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/[?mode] 
         //HttpRequest request = new HttpRequest("filename", "https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/", "Bill Gatas");
 
-        var req = System.Net.WebRequest.Create("https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/");
+
+        // Create a new web request.
+        HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/");
+
+
+
+        // Add appropriate details
+        byte[] payload = Encoding.UTF8.GetBytes(InputTextBox.Text);
+
+        req.ContentLength = payload.Length;
         req.ContentType = "application/json";
         req.Method = "POST";
+        req.Headers.Add("Ocp-Apim-Subscription-Key", "7fa5b75bedb54314b475ae11788d3756");
+
+        Stream stream = req.GetRequestStream();
+        stream.Write(payload, 0, payload.Length);
+        stream.Close();
+        try
+        {
+            if(req.HaveResponse)
+            {
+                HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+                res.Close();
+
+                stream = res.GetResponseStream();
+
+                StreamReader reader = new StreamReader(stream);
+
+                string responseFromServer = reader.ReadToEnd();
+
+                OutputLabel.Text = responseFromServer;
+                System.Diagnostics.Debug.WriteLine(responseFromServer);
+
+                reader.Close();
+                stream.Close();
+                res.Close();
+            } else
+            {
+                // Debugging.
+                System.Diagnostics.Debug.WriteLine("No response.");
+                System.Diagnostics.Debug.WriteLine(req.ToString());
+            }
+        }
+        catch (System.Net.WebException exception)
+        {
+            System.Diagnostics.Debug.WriteLine(exception.Status);
+        }
+
+        // Manipulate to view response in browser.
+        //Console.WriteLine(req.Headers);
+
         //var data = HttpServerUtility.UrlTokenEncode(Encoding.UTF8.GetBytes(InputTextBox.Text));
-        var data = Encoding.UTF8.GetBytes(InputTextBox.Text);
-        req.ContentLength = data.Length;
+        //var data = Encoding.UTF8.GetBytes(InputTextBox.Text);
+        //req.ContentLength = data.Length;
 
-        var reqStream = req.GetRequestStream();
-        reqStream.Write(data, 0, data.Length);
-        reqStream.Close();
+        //var reqStream = req.GetRequestStream();
+        //reqStream.Write(data, 0, data.Length);
+        //reqStream.Close();
 
-        var res = req.GetResponse();
+        //var res = req.GetResponse();
 
-        InputTextBox.Text = req.GetResponse().ToString() + ", end";
+        //OutputLabel.Text = "begin << " + req.GetResponse().ToString() + " >> end";
 
         //var req = new HttpRequest("some-name", "https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/", "Bill Gatas");
     }
