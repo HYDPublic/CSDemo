@@ -7,8 +7,9 @@
             By entering text below, you will submit your input to the Microsoft Cognitive Services API that will return your results
             and show you all the cool things it's capable of doing.
         </p>
+        <%--<button id="otherButton">Test Button</button>--%>
         <asp:Label runat="server" ID="InputLabel">Input: </asp:Label>
         <asp:TextBox runat="server" ID="InputTextBox"></asp:TextBox>
-        <asp:Button runat="server" ID="InputSubmitButton" text="Submit!" OnClick="InputSubmitButton_Click" />
+        <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" />
     </div>
-</asp:Content> 
+</asp:Content>
