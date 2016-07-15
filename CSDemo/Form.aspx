@@ -17,7 +17,7 @@
 
         <asp:Label runat="server">Output: </asp:Label>
         <br />
-        <asp:Label runat="server" ID="OutputLabel">dummy text</asp:Label>
+        <asp:Label runat="server" ID="OutputLabel"></asp:Label>
 
     </div>
 </asp:Content>
