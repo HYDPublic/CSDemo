@@ -46,8 +46,8 @@ public partial class Default2 : System.Web.UI.Page
         var paramString = HttpUtility.ParseQueryString(string.Empty);
 
         //Static text example from API reference. Should normally be input text.
-        paramString["text"] = input.Length == 0 ? string.Empty : input;
-        //paramString["text"] = input; // replace all spaces with + ?
+        //paramString["text"] = input.Length == 0 ? string.Empty : input;
+        paramString["text"] = input; // replace all spaces with + ?
 
         byte[] payload = Encoding.UTF8.GetBytes(paramString.ToString());
 
@@ -71,7 +71,16 @@ public partial class Default2 : System.Web.UI.Page
             {
                 // Values passed.
                 JToken flaggedTokens = json.SelectToken("flaggedTokens");
-                //JEnumerable children = flaggedTokens.Value<JToken>("suggestion");
+                var children = flaggedTokens.Values<JToken>();
+                foreach (JToken word in children.Values<JToken>("token"))
+                {
+                    System.Diagnostics.Debug.WriteLine("---");
+                    System.Diagnostics.Debug.WriteLine(word.Value<JToken>().ToString());
+                    // this works, just change "token" above to "suggestions" then do the same 
+                    // and parse all "suggestion" tags.
+                    System.Diagnostics.Debug.WriteLine("---");
+                }
+                System.Diagnostics.Debug.WriteLine(children.ToString());
             }
 
             //JToken type = json.SelectToken("_type");
