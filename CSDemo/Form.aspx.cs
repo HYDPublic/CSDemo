@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 public partial class Default2 : System.Web.UI.Page
 {
@@ -45,7 +46,8 @@ public partial class Default2 : System.Web.UI.Page
         var paramString = HttpUtility.ParseQueryString(string.Empty);
 
         //Static text example from API reference. Should normally be input text.
-        paramString["text"] = input; // replace all spaces with + ?
+        paramString["text"] = input.Length == 0 ? string.Empty : input;
+        //paramString["text"] = input; // replace all spaces with + ?
 
         byte[] payload = Encoding.UTF8.GetBytes(paramString.ToString());
 
@@ -57,11 +59,43 @@ public partial class Default2 : System.Web.UI.Page
             // Placeholder will store the value to update the OutputLabel.
             var responseBody = response.Content;
             var serializedJson = await responseBody.ReadAsStringAsync();
-            JObject json = (JObject)JsonConvert.DeserializeObject(serializedJson);
-            JToken flaggedTokens = json.SelectToken("flaggedTokens");
 
-            System.Diagnostics.Debug.WriteLine(flaggedTokens.ToString());
-            //placeholder = json.GetType().ToString();
+            JObject json = (JObject)JsonConvert.DeserializeObject(serializedJson);
+
+            if(json.Value<string>("_type").Equals("ErrorResponse"))
+            {
+                // Error.
+                placeholder = input.Length == 0 ? "No words entered!" : "Error response.";
+            }
+            else 
+            {
+                // Values passed.
+                JToken flaggedTokens = json.SelectToken("flaggedTokens");
+                //JEnumerable children = flaggedTokens.Value<JToken>("suggestion");
+            }
+
+            //JToken type = json.SelectToken("_type");
+            //System.Diagnostics.Debug.WriteLine(json.Value<string>("_type"));
+            //if (type.Value.Equals("ErrorResponse"))
+            //{
+
+            //}
+
+            //JToken flaggedTokens = json.SelectToken("flaggedTokens");
+
+            //if(json.Count > 0)
+            //{
+            //    JEnumerable<JToken> children = flaggedTokens.Children();
+            //    IEnumerator<JToken> childEnumerator = children.GetEnumerator();
+            //    placeholder = childEnumerator.Current.ToString();
+            //}
+            //else
+            //{
+            //    placeholder = "No spelling mistakes were detected!";
+            //}
+
+            //System.Diagnostics.Debug.WriteLine(flaggedTokens.ToString());
+
             placeholder = json.ToString();
         }
 
