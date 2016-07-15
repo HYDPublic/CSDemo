@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 public partial class Default2 : System.Web.UI.Page
 {
 
+    static String placeholder = "";
+
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -45,25 +47,31 @@ public partial class Default2 : System.Web.UI.Page
         HttpResponseMessage response;
 
         // Request body
-        byte[] byteData = Encoding.UTF8.GetBytes("Bill Gatas");
+        var paramString = HttpUtility.ParseQueryString(string.Empty);
+        paramString["text"] = "Bill+Gatas";
+        // Do URL Encoding on the input text
+        byte[] byteData = Encoding.UTF8.GetBytes(paramString.ToString());
 
         using (var content = new ByteArrayContent(byteData))
         {
+            // JSON gets 400 error.
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-            //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             System.Diagnostics.Debug.WriteLine("Test");
             response = await client.PostAsync(uri, content);
-            response.EnsureSuccessStatusCode();
+            placeholder = response.ToString();
+            Console.WriteLine("wrote to the placeholder");
+            //response.EnsureSuccessStatusCode();
         }
-    }
 
-    static void UpdateOutputLabel(string s)
-    {
-
+        System.Diagnostics.Debug.WriteLine(response.ToString());
+        System.Diagnostics.Debug.WriteLine(response.StatusCode);
     }
 
     protected void InputSubmitButton_Click(object sender, EventArgs e)
     {
         MakeRequest();
+        OutputLabel.Text = placeholder;
+        Console.WriteLine("wrote to the output label");
+
     }
 }
