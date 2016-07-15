@@ -20,17 +20,7 @@ public partial class Default2 : System.Web.UI.Page
 
     static async void MakeRequest()
     {
-        // Create a new web request.
-        //HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=spell");
-
-        //// Add appropriate details
-        ////byte[] payload = Encoding.UTF8.GetBytes(InputTextBox.Text);
         byte[] payload = Encoding.UTF8.GetBytes("Bill Gatas");
-
-        //req.ContentLength = payload.Length;
-        //req.ContentType = "application/x-www-form-urlencoded";
-        //req.Method = "POST";
-        //req.Headers.Add("Ocp-Apim-Subscription-Key", "7fa5b75bedb54314b475ae11788d3756");
 
         // their stuff
         HttpClient client = new HttpClient();
@@ -49,7 +39,7 @@ public partial class Default2 : System.Web.UI.Page
         // Request body
         var paramString = HttpUtility.ParseQueryString(string.Empty);
         paramString["text"] = "Bill+Gatas";
-        // Do URL Encoding on the input text
+        // Do URL Encoding on the input text, not static like above
         byte[] byteData = Encoding.UTF8.GetBytes(paramString.ToString());
 
         using (var content = new ByteArrayContent(byteData))
@@ -60,6 +50,8 @@ public partial class Default2 : System.Web.UI.Page
             response = await client.PostAsync(uri, content);
             placeholder = response.ToString();
             Console.WriteLine("wrote to the placeholder");
+
+            // Double check the reference on the below method
             //response.EnsureSuccessStatusCode();
         }
 
@@ -72,6 +64,5 @@ public partial class Default2 : System.Web.UI.Page
         MakeRequest();
         OutputLabel.Text = placeholder;
         Console.WriteLine("wrote to the output label");
-
     }
 }
