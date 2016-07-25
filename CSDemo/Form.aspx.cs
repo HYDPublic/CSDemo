@@ -44,13 +44,10 @@ public partial class Default2 : System.Web.UI.Page
 
         // Request body
         var paramString = HttpUtility.ParseQueryString(string.Empty);
-
-        //Static text example from API reference. Should normally be input text.
-        //paramString["text"] = input.Length == 0 ? string.Empty : input;
-        paramString["text"] = input; // replace all spaces with + ?
+        paramString["text"] = input; // replace all spaces with +?
 
         byte[] payload = Encoding.UTF8.GetBytes(paramString.ToString());
-
+        System.Diagnostics.Debug.WriteLine(paramString.ToString());
         using (var content = new ByteArrayContent(payload))
         {
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
@@ -62,57 +59,37 @@ public partial class Default2 : System.Web.UI.Page
 
             JObject json = (JObject)JsonConvert.DeserializeObject(serializedJson);
 
-            if(json.Value<string>("_type").Equals("ErrorResponse"))
+            if (json.Value<string>("_type").Equals("ErrorResponse"))
             {
-                // Error.
+                // Error
                 placeholder = input.Length == 0 ? "No words entered!" : "Error response.";
             }
-            else 
+            else
             {
                 // Values passed.
                 JToken flaggedTokens = json.SelectToken("flaggedTokens");
-                var children = flaggedTokens.Values<JToken>();
-                foreach (JToken word in children.Values<JToken>("token"))
+                var flaggedTokenChildren = flaggedTokens.Values<JToken>();
+
+                foreach (JToken token in flaggedTokenChildren.Values<JToken>("token"))
                 {
-                    System.Diagnostics.Debug.WriteLine("---");
-                    System.Diagnostics.Debug.WriteLine(word.Value<JToken>().ToString());
+                    var word = flaggedTokenChildren.Values<JToken>("suggestions");
+                    var wordChildren = word.Values<JToken>();
+
+                    foreach (JToken suggestion in wordChildren.Values<JToken>("suggestion"))
+                    {
+                        System.Diagnostics.Debug.WriteLine(suggestion.Value<JToken>().ToString());
+                    }
+
+                    //placeholder = json.ToString();
+
+                    //System.Diagnostics.Debug.WriteLine("---");
+                    //System.Diagnostics.Debug.WriteLine(token.Value<JToken>("token").ToString());
+                    //System.Diagnostics.Debug.WriteLine(token.Value<JToken>("suggestions").ToString());
                     // this works, just change "token" above to "suggestions" then do the same 
                     // and parse all "suggestion" tags.
-                    System.Diagnostics.Debug.WriteLine("---");
+                    //System.Diagnostics.Debug.WriteLine("---");
                 }
-                System.Diagnostics.Debug.WriteLine(children.ToString());
             }
-
-            //JToken type = json.SelectToken("_type");
-            //System.Diagnostics.Debug.WriteLine(json.Value<string>("_type"));
-            //if (type.Value.Equals("ErrorResponse"))
-            //{
-
-            //}
-
-            //JToken flaggedTokens = json.SelectToken("flaggedTokens");
-
-            //if(json.Count > 0)
-            //{
-            //    JEnumerable<JToken> children = flaggedTokens.Children();
-            //    IEnumerator<JToken> childEnumerator = children.GetEnumerator();
-            //    placeholder = childEnumerator.Current.ToString();
-            //}
-            //else
-            //{
-            //    placeholder = "No spelling mistakes were detected!";
-            //}
-
-            //System.Diagnostics.Debug.WriteLine(flaggedTokens.ToString());
-
-            placeholder = json.ToString();
         }
-
     }
-
-    //void UpdateLabel(string val)
-    //{
-    //    OutputLabel.Text = val;
-    //}
-
 }
