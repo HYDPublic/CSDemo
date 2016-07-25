@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public partial class Default2 : System.Web.UI.Page
 {
@@ -66,20 +67,66 @@ public partial class Default2 : System.Web.UI.Page
             }
             else
             {
-                // Values passed.
+                // Values passed correctly
                 JToken flaggedTokens = json.SelectToken("flaggedTokens");
+
+                foreach (JToken word in flaggedTokens.Children<JToken>())
+                {
+                    // Enumerate the IEnumerable object. Only print values at index 1 & 3.
+                    var i = 0;
+                    foreach (JToken item in word.Values())
+                    {
+                        switch(i)
+                        {
+                            // Index 1 - raw token.
+                            case 1:
+                                placeholder += (item.ToString() + "<br>");
+                                Debug.WriteLine(item.ToString());
+                                break;
+                            // Index 3 - suggested corrections to the token.
+                            case 3:
+                                // iterate the array.
+                                var temp = item.Values();
+                                Debug.WriteLine(word.ToString());
+                                break;
+                        }
+                        i++;
+                    }
+
+                    Debug.WriteLine(word.ToString());
+
+                    var token = word.Values();
+                    Debug.WriteLine(token.ToString());
+                    System.Diagnostics.Debug.WriteLine(token.Values("token").ToString());
+
+                    var w = token.Values("token");
+
+                    var suggestions = word.Values<JToken>("suggestions");
+                }
+
+
                 var flaggedTokenChildren = flaggedTokens.Values<JToken>();
 
-                foreach (JToken token in flaggedTokenChildren.Values<JToken>("token"))
+                var t = flaggedTokenChildren.Values<JToken>();
+                var p = flaggedTokenChildren.Values<JToken>("0");
+                var s = flaggedTokenChildren.Values<JToken>("suggestions");
+
+                foreach (JToken token in flaggedTokenChildren.Values<JToken>())
                 {
+                    //var t = token.Values<JToken>("token");
+                    //var s = token.Values<JToken>("suggestions");
+
+                    placeholder += (token.ToString() + "<br>");
                     var word = flaggedTokenChildren.Values<JToken>("suggestions");
                     var wordChildren = word.Values<JToken>();
 
                     foreach (JToken suggestion in wordChildren.Values<JToken>("suggestion"))
                     {
-                        System.Diagnostics.Debug.WriteLine(suggestion.Value<JToken>().ToString());
+                        //System.Diagnostics.Debug.WriteLine(suggestion.Value<JToken>().ToString());
+                        placeholder += (suggestion.ToString() + "<br>");
                     }
 
+                    placeholder += "<br>";
                     //placeholder = json.ToString();
 
                     //System.Diagnostics.Debug.WriteLine("---");
