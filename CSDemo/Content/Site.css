@@ -18,6 +18,10 @@ textarea {
     max-width: 280px;
 }
 
+.inline {
+    display: inline;
+}
+
 div.jumbotron > hr {
     border: 0.5px solid gray;
 }
@@ -28,6 +32,10 @@ div.jumbotron > hr {
 
 .success {
     color: lightgreen;
+}
+
+.button {
+    width: 175px;
 }
 
 .grid {

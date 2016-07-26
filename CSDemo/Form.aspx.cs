@@ -21,6 +21,7 @@ public partial class Default2 : System.Web.UI.Page
     {
         this.Title = "Form";
         placeholder = "";
+        OutputLabel.Text = "";
     }
 
     protected async void InputSubmitButton_Click(object sender, EventArgs e)
