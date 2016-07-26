@@ -18,12 +18,13 @@ textarea {
     max-width: 280px;
 }
 
-.test-class {
+.error {
     color: red;
+    text-decoration: underline;
 }
 
-* {
-    border: 1px solid red;
+.center {
+    text-align: center;
 }
 
 /* Responsive: Portrait tablets and up */

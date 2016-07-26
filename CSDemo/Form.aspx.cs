@@ -67,6 +67,7 @@ public partial class Default2 : System.Web.UI.Page
             {
                 // Error
                 placeholder = input.Length == 0 ? "No words entered!" : "Error response.";
+                placeholder = String.Format("{0}{1}{2}", @"<h2 class='error'>", placeholder, @"</h2>");
             }
             else
             {
@@ -114,10 +115,11 @@ public partial class Default2 : System.Web.UI.Page
             }
         }
 
-        string prefix = @"<div class='test-class'>";
+        string prefix = @"<div class='row center'>";
         string suffix = @"</div>";
 
-        placeholder = prefix + placeholder + suffix;
+        // String.Format vs. placeholder = prefix + placeholder + suffix; ??
+        placeholder = String.Format("{0}{1}{2}", prefix, placeholder, suffix);
 
     }
 }
