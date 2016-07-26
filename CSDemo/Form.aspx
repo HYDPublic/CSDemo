@@ -7,15 +7,16 @@
             By entering text below, you will submit your input to the Microsoft Cognitive Services API that will return your results
             and show you all the cool things it's capable of doing.
         </p>
-        <%--<button id="otherButton">Test Button</button>--%>
-        <asp:Label runat="server" ID="InputLabel">Input: </asp:Label>
-        <asp:TextBox runat="server" ID="InputTextBox"></asp:TextBox>
-        <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" />
+
+        <div class="row center">
+            <asp:Label runat="server" ID="InputLabel">Input: </asp:Label>
+            <asp:TextBox runat="server" ID="InputTextBox"></asp:TextBox>
+            <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" />
+        </div>
 
         <hr />
-        <hr />
 
-        <asp:Label runat="server">Output: </asp:Label>
+        <%--<asp:Label runat="server">Output: </asp:Label>--%>
         <br />
         <asp:Label runat="server" ID="OutputLabel"></asp:Label>
 

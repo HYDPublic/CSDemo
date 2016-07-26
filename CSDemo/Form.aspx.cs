@@ -63,11 +63,15 @@ public partial class Default2 : System.Web.UI.Page
 
             JObject json = (JObject)JsonConvert.DeserializeObject(serializedJson);
 
+
+            // no longer making a request after this point. Consider breaking this into multiple smaller functions.
+
             if (json.Value<string>("_type").Equals("ErrorResponse"))
             {
                 // Error
                 placeholder = input.Length == 0 ? "No words entered!" : "Error response.";
-                placeholder = String.Format("{0}{1}{2}", @"<h2 class='error'>", placeholder, @"</h2>");
+                placeholder = @"<h2 class='error'>" + placeholder + @"</h2>";
+                //placeholder = String.Format("{0}{1}{2}", @"<h2 class='error'>", placeholder, @"</h2>");
             }
             else
             {
@@ -78,11 +82,12 @@ public partial class Default2 : System.Web.UI.Page
                 if(flaggedTokens.First == null)
                 {
                     placeholder = "You spelled everything correctly!";
+                    placeholder = String.Format("{0}{1}{2}", @"<h2 class='success'>", placeholder, @"</h2>");
                 }
-
+                
+                // If the above if statement executes, this foreach never iterates. 
                 foreach (JToken word in flaggedTokens.Children<JToken>())
                 {
-
                     var i = 0;
                     // Enumerate the IEnumerable object. Only print values at index 1 & 3.
                     foreach (JToken item in word.Values())
@@ -91,7 +96,9 @@ public partial class Default2 : System.Web.UI.Page
                         {
                             // Index 1 - raw token.
                             case 1:
+                                placeholder += @"<div class='row'><div class='col-md-6 grid'>";
                                 placeholder += ("Token: " + item.ToString() + "<br>");
+                                placeholder += @"</div>";
                                 Debug.WriteLine(item.ToString());
                                 break;
 
@@ -103,7 +110,13 @@ public partial class Default2 : System.Web.UI.Page
                                 bool flip = true;
                                 foreach (var val in suggestions)
                                 {
-                                    placeholder += flip ? ("Suggestion: " + val.ToString() + "<br>") : ("Score: " + val.ToString() + "<br><br>");
+                                    if (flip)
+                                    {
+                                        placeholder += @"<div class='col-md-6 grid'>";
+                                        placeholder += "Suggestion: " + val.ToString();
+                                        placeholder += @"</div></div>";
+                                    }
+                                    //placeholder += flip ? ("Suggestion: " + val.ToString() + "<br>") : ("Score: " + val.ToString() + "<br><br>");
                                     flip = !flip;
                                 }
                                 Debug.WriteLine(suggestions.ToString());
@@ -118,8 +131,10 @@ public partial class Default2 : System.Web.UI.Page
         string prefix = @"<div class='row center'>";
         string suffix = @"</div>";
 
-        // String.Format vs. placeholder = prefix + placeholder + suffix; ??
+        // Difference between these methods?
+        // placeholder = prefix + placeholder + suffix; ??
+        // placeholder = $"{prefix} {placeholder} {suffix}";
         placeholder = String.Format("{0}{1}{2}", prefix, placeholder, suffix);
-
+        Debug.WriteLine(placeholder);
     }
 }
