@@ -17,7 +17,7 @@ public partial class Default2 : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        //
+        placeholder = "";
     }
 
     protected async void InputSubmitButton_Click(object sender, EventArgs e)
@@ -48,7 +48,7 @@ public partial class Default2 : System.Web.UI.Page
         paramString["text"] = input; // replace all spaces with +?
 
         byte[] payload = Encoding.UTF8.GetBytes(paramString.ToString());
-        System.Diagnostics.Debug.WriteLine(paramString.ToString());
+        Debug.WriteLine(paramString.ToString());
         using (var content = new ByteArrayContent(payload))
         {
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
@@ -70,8 +70,15 @@ public partial class Default2 : System.Web.UI.Page
                 // Values passed correctly
                 JToken flaggedTokens = json.SelectToken("flaggedTokens");
 
+                // Set the placeholder now. If flaggedTokens is empty, it won't be overwritten
+                if(flaggedTokens.First == null)
+                {
+                    placeholder = "You spelled everything correctly!";
+                }
+
                 foreach (JToken word in flaggedTokens.Children<JToken>())
                 {
+
                     var i = 0;
                     // Enumerate the IEnumerable object. Only print values at index 1 & 3.
                     foreach (JToken item in word.Values())
