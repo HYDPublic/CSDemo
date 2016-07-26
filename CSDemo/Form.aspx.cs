@@ -15,11 +15,8 @@ public partial class Default2 : System.Web.UI.Page
     static String placeholder;
     static String input;
 
-    string Title { get; set; }
-
     protected void Page_Load(object sender, EventArgs e)
     {
-        this.Title = "Form";
         placeholder = "";
         OutputLabel.Text = "";
     }
@@ -87,8 +84,10 @@ public partial class Default2 : System.Web.UI.Page
                 }
                 
                 // If the above if statement executes, this foreach never iterates. 
+                // sometimes incorrect words aren't flagged and we get error responses for no reason.... need to test
                 foreach (JToken word in flaggedTokens.Children<JToken>())
                 {
+                    Debug.WriteLine("Entered the foreach loop.");
                     var i = 0;
                     // Enumerate the IEnumerable object. Only print values at index 1 & 3.
                     foreach (JToken item in word.Values())
