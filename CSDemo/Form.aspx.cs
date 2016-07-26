@@ -137,4 +137,13 @@ public partial class Default2 : System.Web.UI.Page
         placeholder = String.Format("{0}{1}{2}", prefix, placeholder, suffix);
         Debug.WriteLine(placeholder);
     }
+
+    protected void ResetButton_Click(object sender, EventArgs e)
+    {
+        InputTextBox.Text = "";
+
+        // Add Score
+        // Maybe also add a confirmation for resetting? or just a label explaining
+        // ScoreLabel.Text = "0";
+    }
 }

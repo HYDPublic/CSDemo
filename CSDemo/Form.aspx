@@ -9,9 +9,14 @@
         </p>
 
         <div class="row center">
-            <asp:Label runat="server" ID="InputLabel">Input: </asp:Label>
-            <asp:TextBox runat="server" ID="InputTextBox"></asp:TextBox>
-            <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" />
+            <div class="row">
+                <asp:Label runat="server" ID="InputLabel">Input: </asp:Label>
+                <asp:TextBox runat="server" ID="InputTextBox"></asp:TextBox>
+            </div>
+            <div class="row">
+                <asp:Button runat="server" ID="ResetButton" text="Reset" OnClick="ResetButton_Click" /> 
+                <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" />
+            </div>
         </div>
 
         <hr />
@@ -21,4 +26,14 @@
         <asp:Label runat="server" ID="OutputLabel"></asp:Label>
 
     </div>
+
+    <script type="text/javascript">
+        $("#<%=InputTextBox.ClientID %>").keydown(function (e) {
+            // Disable backspace (8) and delete (46) key presses.
+            if (e.keyCode == 8 || e.keyCode == 46) {
+                e.preventDefault();
+            }
+            console.log(e.keyCode);
+        });
+    </script>
 </asp:Content>
