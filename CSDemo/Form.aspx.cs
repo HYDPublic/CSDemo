@@ -15,8 +15,11 @@ public partial class Default2 : System.Web.UI.Page
     static String placeholder;
     static String input;
 
+    string Title { get; set; }
+
     protected void Page_Load(object sender, EventArgs e)
     {
+        this.Title = "Form";
         placeholder = "";
     }
 
@@ -110,5 +113,11 @@ public partial class Default2 : System.Web.UI.Page
                 }
             }
         }
+
+        string prefix = @"<div class='test-class'>";
+        string suffix = @"</div>";
+
+        placeholder = prefix + placeholder + suffix;
+
     }
 }

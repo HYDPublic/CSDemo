@@ -18,6 +18,14 @@ textarea {
     max-width: 280px;
 }
 
+.test-class {
+    color: red;
+}
+
+* {
+    border: 1px solid red;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .jumbotron {
