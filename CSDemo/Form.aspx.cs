@@ -68,6 +68,7 @@ public partial class Default2 : System.Web.UI.Page
             {
                 // Error
                 placeholder = input.Length == 0 ? "No words entered!" : "Error response.";
+                Debug.WriteLine(json.ToString());
                 placeholder = @"<h2 class='error'>" + placeholder + @"</h2>";
                 //placeholder = String.Format("{0}{1}{2}", @"<h2 class='error'>", placeholder, @"</h2>");
             }
