@@ -18,6 +18,20 @@ textarea {
     max-width: 280px;
 }
 
+td {
+    padding-left: 40px;
+}
+
+.courier {
+    font-family: 'Courier New';
+    background: #dedede;
+    padding: 0px 2px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
 .inline {
     display: inline;
 }

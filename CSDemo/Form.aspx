@@ -6,8 +6,10 @@
             <h1>Speedy Touch Type! &trade;</h1>
         </div>
         <p class="lead">
-            By entering text below, you will submit your input to the Microsoft Cognitive Services API that will return your results
-            and show you all the cool things it's capable of doing.
+            The <span class="courier">Delete</span> and <span class="courier">Backspace</span> keys have been disabled 
+            for this trial. Do you best to type the following text into the below field <span class="bold">without</span>
+            looking at your keyboard! You will be scored based on how many words are spelled correctly. There is also a 
+            time bonus.
         </p>
 
         <blockquote class="blockquote">
@@ -24,8 +26,8 @@
                 <asp:TextBox runat="server" ID="InputTextBox" CssClass="inline form-control"></asp:TextBox>
             </div>
             <div class="row">
-                <asp:Button runat="server" ID="ResetButton" text="Reset" OnClick="ResetButton_Click" CssClass="button btn btn-danger" /> 
                 <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" CssClass="button btn btn-success" />
+                <asp:Button runat="server" ID="ResetButton" text="Reset" OnClick="ResetButton_Click" CssClass="button btn btn-danger" /> 
             </div>
         </div>
 
