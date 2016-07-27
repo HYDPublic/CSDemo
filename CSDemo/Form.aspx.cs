@@ -15,15 +15,18 @@ public partial class Default2 : System.Web.UI.Page
     static String placeholder;
     static String input;
 
+    static StringLibrary lib;
     TextGenerator generator;
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        lib = new StringLibrary();
         generator = new TextGenerator();
+
         InputText.Text = generator.generateSentence();
 
         placeholder = "";
-        OutputLabel.Text = "Your score will appear here.";
+        OutputLabel.Text = lib.values["default"];
     }
 
     protected async void InputSubmitButton_Click(object sender, EventArgs e)
@@ -39,7 +42,7 @@ public partial class Default2 : System.Web.UI.Page
         HttpClient client = new HttpClient();
 
         // Add appropriate request headers (API subscription key)
-        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "7fa5b75bedb54314b475ae11788d3756");
+        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", lib.values["sub-key"]);
 
         // Request query string.
         var queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -72,10 +75,7 @@ public partial class Default2 : System.Web.UI.Page
             if (json.Value<string>("_type").Equals("ErrorResponse"))
             {
                 // Error
-                placeholder = input.Length == 0 ? "No words entered!" : "Error response.";
-                Debug.WriteLine(json.ToString());
-                placeholder = @"<h2 class='error'>" + placeholder + @"</h2>";
-                //placeholder = String.Format("{0}{1}{2}", @"<h2 class='error'>", placeholder, @"</h2>");
+                placeholder = lib.Error(input.Length);
             }
             else
             {
