@@ -10,20 +10,12 @@ using System.Web;
 public class TextGenerator
 {
 
-    public string Text { get; set; }
-    private string[] easy, medium, hard;
+    //public string Text { get; set; }
+    private string[] sentences;
 
     public TextGenerator()
     {
-        easy = new string[]
-        {
-            "Hello world!",
-            "My name is Freddy",
-            "I like to walk in the park",
-            "I have a pet dog"
-        };
-
-        medium = new string[] 
+        sentences = new string[] 
         {
             "The quick brown fox jumps over the lazy dog",
             "Pack my box with five dozen liquor jugs.",
@@ -32,10 +24,15 @@ public class TextGenerator
             "How vexingly quick daft zebras jump!",
             "Bright vixens jump; dozy fowl quack."
         };
+    }
 
-        // TODO fillout this array with long sentences.
-        hard = new string[] { };
+    public string generateSentence()
+    {
+        Random r = new Random();
 
+        int index = (int)Math.Floor((r.NextDouble() * sentences.Length));
+
+        return sentences[index];
     }
 
 }

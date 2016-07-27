@@ -15,10 +15,15 @@ public partial class Default2 : System.Web.UI.Page
     static String placeholder;
     static String input;
 
+    TextGenerator generator;
+
     protected void Page_Load(object sender, EventArgs e)
     {
+        generator = new TextGenerator();
+        InputText.Text = generator.generateSentence();
+
         placeholder = "";
-        OutputLabel.Text = "";
+        OutputLabel.Text = "Your score will appear here.";
     }
 
     protected async void InputSubmitButton_Click(object sender, EventArgs e)
@@ -154,5 +159,11 @@ public partial class Default2 : System.Web.UI.Page
         // Add Score
         // Maybe also add a confirmation for resetting? or just a label explaining
         // ScoreLabel.Text = "0";
+    }
+
+    protected void NewSentenceButton_Click(object sender, EventArgs e)
+    {
+        InputText.Text = generator.generateSentence();
+        InputTextBox.Text = "";
     }
 }

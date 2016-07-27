@@ -12,11 +12,15 @@
             time bonus.
         </p>
 
-        <blockquote class="blockquote">
-            <p class="m-b-0">
-                <asp:Label runat="server" ID="InputText"></asp:Label>
-            </p>
-        </blockquote>
+        <div class="center">
+            <blockquote class="blockquote">
+                <h2 class="m-b-0">
+                    <span class="courier">
+                        <asp:Label runat="server" ID="InputText"></asp:Label>
+                    </span>
+                </h2>
+            </blockquote>
+        </div>
 
         <div class="row center">
             <div class="row">
@@ -25,6 +29,7 @@
             </div>
             <div class="row">
                 <asp:Button runat="server" ID="InputSubmitButton" OnClick="InputSubmitButton_Click" text="Submit!" CssClass="button btn btn-success" />
+                <asp:Button runat="server" ID="NewSentenceButton" text="New Sentence" CssClass="button btn btn-warning" OnClick="NewSentenceButton_Click" />
                 <asp:Button runat="server" ID="ResetButton" text="Reset" OnClick="ResetButton_Click" CssClass="button btn btn-danger" /> 
             </div>
         </div>
@@ -33,7 +38,7 @@
 
         <%--<asp:Label runat="server">Output: </asp:Label>--%>
         <br />
-        <asp:Label runat="server" ID="OutputLabel"></asp:Label>
+        <asp:Label runat="server" ID="OutputLabel"><h2>Your score will appear here.</h2></asp:Label>
 
     </div>
 
