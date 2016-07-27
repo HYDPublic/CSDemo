@@ -14,7 +14,7 @@
 
         <blockquote class="blockquote">
             <p class="m-b-0">
-                The quick brown fox jumps over the lazy dog.
+                <asp:Label runat="server" ID="InputText"></asp:Label>
             </p>
         </blockquote>
 
