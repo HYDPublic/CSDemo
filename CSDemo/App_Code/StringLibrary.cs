@@ -21,6 +21,7 @@ public class StringLibrary
         // Important string associations in Form
         v["default"] = "Your score will appear here.";
         v["sub-key"] = "7fa5b75bedb54314b475ae11788d3756";
+        v["url"] = "https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?";
 
         // General HTML
         v["h2e"] = @"<h2 class='error'>";

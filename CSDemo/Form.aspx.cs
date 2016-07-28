@@ -47,7 +47,7 @@ public partial class Default2 : System.Web.UI.Page
         // Request query string.
         var queryString = HttpUtility.ParseQueryString(string.Empty);
         queryString["mode"] = "spell";
-        var uri = "https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?" + queryString;
+        var uri = lib.v["url"] + queryString;
 
         // Prepare the response
         HttpResponseMessage response;
@@ -69,76 +69,94 @@ public partial class Default2 : System.Web.UI.Page
 
             JObject json = (JObject)JsonConvert.DeserializeObject(serializedJson);
 
+            JsonParser parser = new JsonParser(json, input);
 
-            // no longer making a request after this point. Consider breaking this into multiple smaller functions.
-            // nothing after this is async either, definitely break into a JSONHandler class.
-
-            if (json.Value<string>("_type").Equals("ErrorResponse"))
+            if(parser.BadResponse())
             {
-                // Error or no input
                 placeholder = lib.Error(input.Length);
             }
             else
             {
-                // Values passed correctly
-                JToken flaggedTokens = json.SelectToken("flaggedTokens");
-
-                if(flaggedTokens.First == null)
-                {
-                    // No spelling mistakes made.
-                    placeholder = lib.Success();
-                }
-                else
-                {
-                    // If the above if statement executes, this foreach never iterates. 
-                    // sometimes incorrect words aren't flagged and we get error responses for no reason.... need to test
-                    foreach (JToken word in flaggedTokens.Children<JToken>())
-                    {
-                        //Debug.WriteLine("Entered the foreach loop.");
-                        var i = 0;
-                        // Enumerate the IEnumerable object. Only print values at index 1 & 3.
-                        foreach (JToken item in word.Values())
-                        {
-                            switch (i)
-                            {
-                                // Index 1 - The raw token
-                                case 1:
-                                    placeholder += lib.v["tr"] + lib.WrapTableTags(item.ToString());
-                                    break;
-
-                                // Index 3 - Suggested corrections to the token.
-                                case 3:
-                                    // iterate the array.
-                                    var suggestions = item.Values().Values();
-
-                                    bool flip = true;
-                                    foreach (var val in suggestions)
-                                    {
-                                        if (flip)
-                                        {
-                                            placeholder += lib.WrapTableTags(val.ToString()) + lib.v["trc"];
-                                        }
-                                        flip = !flip;
-                                    }
-                                    break;
-                            }
-                            i++;
-                        }
-                    }
-                    // Wrap HTML table tags to format results.
-                    placeholder = lib.WrapTable(placeholder);
-                }
+                placeholder = parser.GetResults();
             }
+
+
+            // no longer making a request after this point. Consider breaking this into multiple smaller functions.
+            // nothing after this is async either, definitely break into a JSONHandler class.
+
+            //if (json.Value<string>("_type").Equals("ErrorResponse"))
+            //{
+            //    // Error or no input
+            //    placeholder = lib.Error(input.Length);
+            //}
+            //else
+            //{
+            //    placeholder = parser.GetResults();
+            //    //if(parser.EmptyToken())
+            //    //{
+            //    //    placeholder = lib.Success();
+            //    //}
+            //    //else
+            //    //{
+            //    //    placeholder = parser.GetResults();
+            //    //}
+
+
+            //    //// Values passed correctly
+            //    //JToken flaggedTokens = json.SelectToken("flaggedTokens");
+
+            //    //if(flaggedTokens.First == null)
+            //    //{
+            //    //    // No spelling mistakes made.
+            //    //    placeholder = lib.Success();
+            //    //}
+            //    //else
+            //    //{
+            //    //    // If the above if statement executes, this foreach never iterates. 
+            //    //    // sometimes incorrect words aren't flagged and we get error responses for no reason.... need to test
+            //    //    foreach (JToken word in flaggedTokens.Children<JToken>())
+            //    //    {
+            //    //        //Debug.WriteLine("Entered the foreach loop.");
+            //    //        var i = 0;
+            //    //        // Enumerate the IEnumerable object. Only print values at index 1 & 3.
+            //    //        foreach (JToken item in word.Values())
+            //    //        {
+            //    //            switch (i)
+            //    //            {
+            //    //                // Index 1 - The raw token
+            //    //                case 1:
+            //    //                    placeholder += lib.v["tr"] + lib.WrapTableTags(item.ToString());
+            //    //                    break;
+
+            //    //                // Index 3 - Suggested corrections to the token.
+            //    //                case 3:
+            //    //                    // iterate the array.
+            //    //                    var suggestions = item.Values().Values();
+
+            //    //                    bool flip = true;
+            //    //                    foreach (var val in suggestions)
+            //    //                    {
+            //    //                        if (flip)
+            //    //                        {
+            //    //                            placeholder += lib.WrapTableTags(val.ToString()) + lib.v["trc"];
+            //    //                        }
+            //    //                        flip = !flip;
+            //    //                    }
+            //    //                    break;
+            //    //            }
+            //    //            i++;
+            //    //        }
+            //    //    }
+            //    //    // Wrap HTML table tags to format results.
+            //    //    placeholder = lib.WrapTable(placeholder);
+            //    //}
+            //}
         }
     }
 
     protected void ResetButton_Click(object sender, EventArgs e)
     {
         InputTextBox.Text = "";
-
-        // Add Score
-        // Maybe also add a confirmation for resetting? or just a label explaining
-        // ScoreLabel.Text = "0";
     }
 
     protected void NewSentenceButton_Click(object sender, EventArgs e)
