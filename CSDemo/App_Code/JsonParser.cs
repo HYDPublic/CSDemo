@@ -56,16 +56,14 @@ public class JsonParser
         return null;
     }
 
-
-
     public String GetResults()
     {
         String result = "";
         JToken flaggedTokens = GetToken("flaggedTokens");
 
-        // No spelling mistakes were made in the query so "flaggedTokens" is empty.
         if (flaggedTokens == null)
         {
+            // No spelling mistakes were made in the query so "flaggedTokens" is empty.
             return lib.Success();
         }
         else
@@ -73,14 +71,23 @@ public class JsonParser
             // sometimes incorrect words aren't flagged and we get error responses for no reason.... need to test
             foreach (JToken word in flaggedTokens.Children<JToken>())
             {
-                result += lib.v["tr"] + GetIndex(word.Values(), 1);
-                var suggestions = GetIndexValues(word.Values(), 3);
-                result += lib.WrapTableTags(GetIndex(suggestions, 0)) + lib.v["trc"];
+                result += GetTokenAndSuggestion(word);
             }
 
             // Wrap HTML table tags to format results.
             return lib.WrapTable(result);
         }
+    }
+
+    public String GetTokenAndSuggestion(JToken token)
+    {
+        String result = "";
+
+        result += lib.v["tr"] + lib.WrapTableTags(GetIndex(token.Values(), 1));
+        var suggestions = GetIndexValues(token.Values(), 3);
+        result += lib.WrapTableTags(GetIndex(suggestions, 0)) + lib.v["trc"];
+
+        return result;
     }
 
     public bool BadResponse()
@@ -101,56 +108,5 @@ public class JsonParser
         {
             return token;
         }
-
-        //JToken flaggedTokens = json.SelectToken("flaggedTokens");
-
-        //if (flaggedTokens.First == null)
-        //{
-        //    // No spelling mistakes made.
-        //    placeholder = lib.Success();
-        //}
-        //else
-        //{
-        //    // If the above if statement executes, this foreach never iterates. 
-        //    // sometimes incorrect words aren't flagged and we get error responses for no reason.... need to test
-        //    foreach (JToken word in flaggedTokens.Children<JToken>())
-        //    {
-        //        //Debug.WriteLine("Entered the foreach loop.");
-        //        var i = 0;
-        //        // Enumerate the IEnumerable object. Only print values at index 1 & 3.
-        //        foreach (JToken item in word.Values())
-        //        {
-        //            switch (i)
-        //            {
-        //                // Index 1 - The raw token
-        //                case 1:
-        //                    placeholder += lib.v["tr"] + lib.WrapTableTags(item.ToString());
-        //                    break;
-
-        //                // Index 3 - Suggested corrections to the token.
-        //                case 3:
-        //                    // iterate the array.
-        //                    var suggestions = item.Values().Values();
-
-        //                    bool flip = true;
-        //                    foreach (var val in suggestions)
-        //                    {
-        //                        if (flip)
-        //                        {
-        //                            placeholder += lib.WrapTableTags(val.ToString()) + lib.v["trc"];
-        //                        }
-        //                        flip = !flip;
-        //                    }
-        //                    break;
-        //            }
-        //            i++;
-        //        }
-        //    }
-        //    // Wrap HTML table tags to format results.
-        //    placeholder = lib.WrapTable(placeholder);
-        //}
-
-        //return json.SelectToken("flaggedTokens").First == null;
     }
-
 }

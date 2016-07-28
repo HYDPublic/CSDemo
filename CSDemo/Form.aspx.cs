@@ -12,6 +12,8 @@ using System.Diagnostics;
 public partial class Default2 : System.Web.UI.Page
 {
 
+    // TODO: keep the same test string on "Submit" click.
+
     static String placeholder;
     static String input;
 
@@ -79,78 +81,6 @@ public partial class Default2 : System.Web.UI.Page
             {
                 placeholder = parser.GetResults();
             }
-
-
-            // no longer making a request after this point. Consider breaking this into multiple smaller functions.
-            // nothing after this is async either, definitely break into a JSONHandler class.
-
-            //if (json.Value<string>("_type").Equals("ErrorResponse"))
-            //{
-            //    // Error or no input
-            //    placeholder = lib.Error(input.Length);
-            //}
-            //else
-            //{
-            //    placeholder = parser.GetResults();
-            //    //if(parser.EmptyToken())
-            //    //{
-            //    //    placeholder = lib.Success();
-            //    //}
-            //    //else
-            //    //{
-            //    //    placeholder = parser.GetResults();
-            //    //}
-
-
-            //    //// Values passed correctly
-            //    //JToken flaggedTokens = json.SelectToken("flaggedTokens");
-
-            //    //if(flaggedTokens.First == null)
-            //    //{
-            //    //    // No spelling mistakes made.
-            //    //    placeholder = lib.Success();
-            //    //}
-            //    //else
-            //    //{
-            //    //    // If the above if statement executes, this foreach never iterates. 
-            //    //    // sometimes incorrect words aren't flagged and we get error responses for no reason.... need to test
-            //    //    foreach (JToken word in flaggedTokens.Children<JToken>())
-            //    //    {
-            //    //        //Debug.WriteLine("Entered the foreach loop.");
-            //    //        var i = 0;
-            //    //        // Enumerate the IEnumerable object. Only print values at index 1 & 3.
-            //    //        foreach (JToken item in word.Values())
-            //    //        {
-            //    //            switch (i)
-            //    //            {
-            //    //                // Index 1 - The raw token
-            //    //                case 1:
-            //    //                    placeholder += lib.v["tr"] + lib.WrapTableTags(item.ToString());
-            //    //                    break;
-
-            //    //                // Index 3 - Suggested corrections to the token.
-            //    //                case 3:
-            //    //                    // iterate the array.
-            //    //                    var suggestions = item.Values().Values();
-
-            //    //                    bool flip = true;
-            //    //                    foreach (var val in suggestions)
-            //    //                    {
-            //    //                        if (flip)
-            //    //                        {
-            //    //                            placeholder += lib.WrapTableTags(val.ToString()) + lib.v["trc"];
-            //    //                        }
-            //    //                        flip = !flip;
-            //    //                    }
-            //    //                    break;
-            //    //            }
-            //    //            i++;
-            //    //        }
-            //    //    }
-            //    //    // Wrap HTML table tags to format results.
-            //    //    placeholder = lib.WrapTable(placeholder);
-            //    //}
-            //}
         }
     }
 
