@@ -26,7 +26,7 @@ public partial class Default2 : System.Web.UI.Page
         InputText.Text = generator.generateSentence();
 
         placeholder = "";
-        OutputLabel.Text = lib.values["default"];
+        OutputLabel.Text = lib.v["default"]; // center this text in a div
     }
 
     protected async void InputSubmitButton_Click(object sender, EventArgs e)
@@ -42,7 +42,7 @@ public partial class Default2 : System.Web.UI.Page
         HttpClient client = new HttpClient();
 
         // Add appropriate request headers (API subscription key)
-        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", lib.values["sub-key"]);
+        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", lib.v["sub-key"]);
 
         // Request query string.
         var queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -71,10 +71,11 @@ public partial class Default2 : System.Web.UI.Page
 
 
             // no longer making a request after this point. Consider breaking this into multiple smaller functions.
+            // nothing after this is async either, definitely break into a JSONHandler class.
 
             if (json.Value<string>("_type").Equals("ErrorResponse"))
             {
-                // Error
+                // Error or no input
                 placeholder = lib.Error(input.Length);
             }
             else
@@ -82,11 +83,10 @@ public partial class Default2 : System.Web.UI.Page
                 // Values passed correctly
                 JToken flaggedTokens = json.SelectToken("flaggedTokens");
 
-                // Set the placeholder now. If flaggedTokens is empty, it won't be overwritten
                 if(flaggedTokens.First == null)
                 {
-                    placeholder = "You spelled everything correctly!";
-                    placeholder = String.Format("{0}{1}{2}", @"<h2 class='success'>", placeholder, @"</h2>");
+                    // No spelling mistakes made.
+                    placeholder = lib.Success();
                 }
                 else
                 {
@@ -94,22 +94,19 @@ public partial class Default2 : System.Web.UI.Page
                     // sometimes incorrect words aren't flagged and we get error responses for no reason.... need to test
                     foreach (JToken word in flaggedTokens.Children<JToken>())
                     {
-                        Debug.WriteLine("Entered the foreach loop.");
+                        //Debug.WriteLine("Entered the foreach loop.");
                         var i = 0;
                         // Enumerate the IEnumerable object. Only print values at index 1 & 3.
                         foreach (JToken item in word.Values())
                         {
                             switch (i)
                             {
-                                // Index 1 - raw token.
+                                // Index 1 - The raw token
                                 case 1:
-                                    placeholder += @"<tr><td>";
-                                    placeholder += (item.ToString() + "<br>");
-                                    placeholder += @"</td>";
-                                    Debug.WriteLine(item.ToString());
+                                    placeholder += lib.v["tr"] + lib.WrapTableTags(item.ToString());
                                     break;
 
-                                // Index 3 - suggested corrections to the token.
+                                // Index 3 - Suggested corrections to the token.
                                 case 3:
                                     // iterate the array.
                                     var suggestions = item.Values().Values();
@@ -119,34 +116,17 @@ public partial class Default2 : System.Web.UI.Page
                                     {
                                         if (flip)
                                         {
-                                            placeholder += @"<td>";
-                                            placeholder += val.ToString();
-                                            placeholder += @"</td></tr>";
+                                            placeholder += lib.WrapTableTags(val.ToString()) + lib.v["trc"];
                                         }
-                                        //placeholder += flip ? ("Suggestion: " + val.ToString() + "<br>") : ("Score: " + val.ToString() + "<br><br>");
                                         flip = !flip;
                                     }
-                                    Debug.WriteLine(suggestions.ToString());
                                     break;
                             }
                             i++;
                         }
                     }
-                    string prefix =
-                        @"<div>
-                              <table class='table table-striped'>
-                                  <thead>
-                                      <tr>
-                                          <th>Token</th>
-                                          <th>Suggestion</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                        ";
-                    string suffix = @"</tbody></table></div>";
-
-                    placeholder = String.Format("{0}{1}{2}", prefix, placeholder, suffix);
-                    Debug.WriteLine(placeholder);
+                    // Wrap HTML table tags to format results.
+                    placeholder = lib.WrapTable(placeholder);
                 }
             }
         }
