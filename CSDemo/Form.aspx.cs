@@ -39,10 +39,11 @@ public partial class Default2 : System.Web.UI.Page
         await MakeRequest();
 
         // For Edit Distance, lower is better. Subtract from length of string for easier interpretation
-        var score = Math.Max(input.Length, prompt.Length) - CalculateEditDistance(prompt, input);
+        var max = Math.Max(input.Length, prompt.Length);
+        var score = max - CalculateEditDistance(prompt, input);
 
         // Format output string
-        var output = $"Phrase: {prompt}<br> Input: {input}<br> Your Score: {score}!<br>";
+        var output = $"Phrase: {prompt}<br> Input: {input}<br> Your Score: {score}/{max}!<br>";
 
         OutputLabel.Text = output + placeholder;
     }
@@ -112,27 +113,46 @@ public partial class Default2 : System.Web.UI.Page
         return c;
     }
 
-    public int CalculateEditDistance(string a, string b)
+    public int CalculateEditDistance(string prompt, string input)
     {
-        if (String.IsNullOrEmpty(a) || String.IsNullOrEmpty(b)) return 0;
+        if (String.IsNullOrEmpty(prompt) || String.IsNullOrEmpty(input))
+        {
+            return 0;
+        }
 
-        int lengthA = a.Length;
-        int lengthB = b.Length;
-        var distances = new int[lengthA + 1, lengthB + 1];
-        for (int i = 0; i <= lengthA; distances[i, 0] = i++) ;
-        for (int j = 0; j <= lengthB; distances[0, j] = j++) ;
+        int p_length = prompt.Length;
+        int i_length = input.Length;
 
-        for (int i = 1; i <= lengthA; i++)
-            for (int j = 1; j <= lengthB; j++)
+        var distances = new int[p_length + 1, i_length + 1];
+
+        //for (int i = 0; i <= p_length; distances[i, 0] = i++);
+
+        for (int i=0; i<= p_length; i++)
+        {
+            distances[i, 0] = i;
+        }
+
+        //for (int j = 0; j <= i_length; distances[0, j] = j++);
+
+        for (int j = 0; j <= i_length; j++)
+        {
+            distances[0, j] = j;
+        }
+
+        for (int i = 1; i <= p_length; i++)
+        {
+            for (int j = 1; j <= i_length; j++)
             {
-                int cost = b[j - 1] == a[i - 1] ? 0 : 1;
-                distances[i, j] = Math.Min
-                    (
-                    Math.Min(distances[i - 1, j] + 1, distances[i, j - 1] + 1),
-                    distances[i - 1, j - 1] + cost
+                int cost = input[j - 1] == prompt[i - 1] ? 0 : 1;
+
+                distances[i, j] = Math.Min (
+                        Math.Min(distances[i - 1, j] + 1, distances[i, j - 1] + 1),
+                        distances[i - 1, j - 1] + cost
                     );
             }
-        return distances[lengthA, lengthB];
+        }
+
+        return distances[p_length, i_length];
     }
 
     // Score is calculated based on String Length - Edit Distance
