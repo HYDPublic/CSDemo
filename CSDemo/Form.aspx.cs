@@ -85,6 +85,7 @@ public partial class Default2 : System.Web.UI.Page
             if(parser.BadResponse())
             {
                 placeholder = lib.Error(input.Length);
+                Debug.WriteLine(json.ToString());
             }
             else
             {
