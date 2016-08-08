@@ -16,7 +16,7 @@
             <blockquote class="blockquote">
                 <h2 class="m-b-0">
                     <span class="courier">
-                        <asp:Label runat="server" ID="InputText"></asp:Label>
+                        <asp:Label runat="server" ID="PromptText"></asp:Label>
                     </span>
                 </h2>
             </blockquote>
@@ -36,7 +36,6 @@
 
         <hr />
 
-        <%--<asp:Label runat="server">Output: </asp:Label>--%>
         <br />
         <asp:Label runat="server" ID="OutputLabel"><h2>Your score will appear here.</h2></asp:Label>
 
